@@ -7,7 +7,9 @@ public class MouseControl : MonoBehaviour
 {
    public bool _canMove = true;
    private bool _active = true;
+   private bool _resizing = false;
     [SerializeField] private Image _sprite;
+    public Transform _followPos;
 
     //The below region just creates a reference of this specific controller that we can call from other scripts quickly
     #region Singleton
@@ -40,11 +42,6 @@ public class MouseControl : MonoBehaviour
     void Update()
     {
 
-        if (_canMove && _active)
-        {
-          transform.position = Input.mousePosition;
-        }
-
         if (!_active)
         {
             if (Input.GetKeyDown(KeyCode.CapsLock))
@@ -52,12 +49,35 @@ public class MouseControl : MonoBehaviour
                 Enable();
             }
         }
+        if(!_active) return;
+
+
+        if (_canMove && _active)
+        {
+          transform.position = Input.mousePosition;
+        }
+        else if( _resizing = true)
+        {
+            transform.position = _followPos.position;
+        }
+
+       
 
     }
 
-    public void EndReSize()
+    public void StartResize(Transform followpPoint)
+    {
+
+        _followPos = followpPoint;
+        _canMove = false;
+        _resizing = true;
+
+    }
+
+    public void EndResize()
     {
         _canMove = true;
+        _resizing = false;
         
     }
 

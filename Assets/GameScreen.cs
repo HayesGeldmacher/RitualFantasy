@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameScreen : MonoBehaviour, IPointerDownHandler
 {
@@ -21,5 +22,6 @@ public class GameScreen : MonoBehaviour, IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         MouseControl.instance.Disable();
+        transform.GetComponent<RectTransform>().SetAsLastSibling();
     }
 }
