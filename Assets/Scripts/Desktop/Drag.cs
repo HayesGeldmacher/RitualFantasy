@@ -2,40 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Drag : MonoBehaviour
+public class Drag : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
 
     [SerializeField] private Canvas _canvas;
-    [SerializeField] private bool _isDragging = false;
-    [SerializeField] private Vector2 _offSet;
+    [SerializeField] private RectTransform _rectTransform;
 
-    public void OnBeginDrag(BaseEventData data)
+    [SerializeField] private RawImage _screenImage;
+    private Color _screenColor;
+    private Vector3 _colors;
+
+    private void Awake()
     {
-        _offSet = Vector2.zero;
-        Vector2 pointerPosition;
-        PointerEventData pointerData = (PointerEventData)data;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)_canvas.transform, pointerData.position, _canvas.worldCamera, out pointerPosition);
-        Vector2 _currentPos = transform.position;
-        _offSet = pointerPosition - _currentPos;
-    }
-    
-    public void DragHandler(BaseEventData data)
-    {
+        _rectTransform = transform.parent.GetComponent<RectTransform>();
+        _canvas = transform.root.GetComponent<Canvas>();
+        _screenImage = transform.parent.GetComponent<RawImage>();
 
- 
-        PointerEventData pointerData = (PointerEventData)data;
-
-        Vector2 cursorPosition;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)_canvas.transform, pointerData.position, _canvas.worldCamera, out cursorPosition);
-
-        transform.position = _canvas.transform.TransformPoint(cursorPosition + _offSet);
-
+        _screenColor.r = _screenImage.color.r;
+        _screenColor.g = _screenImage.color.g;
+        _screenColor.b = _screenImage.color.b;
     }
 
-    public void EndDrag()
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        _isDragging = false;
+        _screenColor.a = 0.6f;
+        _screenImage.color = _screenColor;
     }
 
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        _screenColor.a = 1f;
+        
+        _screenImage.color = _screenColor;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        _rectTransform.SetAsLastSibling();
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        _rectTransform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
+    }
 }
+
