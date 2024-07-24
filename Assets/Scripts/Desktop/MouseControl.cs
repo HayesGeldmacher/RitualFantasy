@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+
 
 public class MouseControl : MonoBehaviour
 {
@@ -56,7 +58,7 @@ public class MouseControl : MonoBehaviour
         {
           transform.position = Input.mousePosition;
         }
-        else if( _resizing = true)
+        else if( _resizing == true)
         {
             transform.position = _followPos.position;
         }
@@ -76,7 +78,11 @@ public class MouseControl : MonoBehaviour
 
     public void EndResize()
     {
+
+        Vector2 currentPos = transform.position;
+        Mouse.current.WarpCursorPosition(currentPos);
         _canMove = true;
+
         _resizing = false;
         
     }
