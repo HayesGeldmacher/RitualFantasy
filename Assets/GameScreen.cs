@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class GameScreen : MonoBehaviour, IPointerDownHandler
 {
-   
+    [SerializeField] private GameObject _windowBorder;
     
     // Start is called before the first frame update
     void Start()
@@ -23,5 +23,17 @@ public class GameScreen : MonoBehaviour, IPointerDownHandler
     {
         MouseControl.instance.Disable();
         transform.GetComponent<RectTransform>().SetAsLastSibling();
+        DisableBorder();
+    }
+
+    public void DisableBorder()
+    {
+        MouseControl.instance._currentGame = this;
+        _windowBorder.SetActive(false);
+    }
+
+    public void EnableBorder()
+    {
+        _windowBorder.SetActive(true);
     }
 }

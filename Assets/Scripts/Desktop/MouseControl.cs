@@ -10,8 +10,10 @@ public class MouseControl : MonoBehaviour
    public bool _canMove = true;
    private bool _active = true;
    private bool _resizing = false;
-    [SerializeField] private Image _sprite;
-    public Transform _followPos;
+   [SerializeField] private Image _sprite;
+   public Transform _followPos;
+   public GameScreen _currentGame;
+   public Fullscreen _fullScreen;
 
     //The below region just creates a reference of this specific controller that we can call from other scripts quickly
     #region Singleton
@@ -49,6 +51,10 @@ public class MouseControl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.CapsLock))
             {
                 Enable();
+                if(_currentGame != null)
+                {
+                    _currentGame.EnableBorder();
+                }
             }
         }
         if(!_active) return;
@@ -100,5 +106,11 @@ public class MouseControl : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         _active = true;
         _sprite.enabled = true;
+
+        if (_fullScreen != null)
+        {
+            _fullScreen.EndFullScreen();
+            _fullScreen = null;
+        }
     }
 }
